@@ -5,14 +5,6 @@ import time
 import urllib
 
 
-'''
-# use Raspberry Pi board pin numbers
-import RPi.GPIO as GPIO
-GPIO.setmode(GPIO.BCM)
-GPIO.cleanup()
-'''
-
-
 publisher = Blueprint('publisher', __name__)
 
 
@@ -23,30 +15,39 @@ def publisher_home():
 
 @publisher.route('/proximity')
 def publisher_proximity():
-    
+
     sensor = DistanceSensor(trigger=23, echo=24)
     distance = sensor.distance * 100
+    sensor = None
+    
     distanceStr = '%.1f' % distance
-    
     datetimeStr = datetime.datetime.now().strftime('%Y-%m-%d+%H:%M:%S')
-    
+
     queryUrl = 'https://esteban-233722.appspot.com/raspberry/proximity/' + datetimeStr + "/" + distanceStr
-    return queryUrl
-    #return urllib.request.urlopen(queryUrl).read(1000)
+    return urllib.request.urlopen(queryUrl).read(1000)
+
+
 
 '''
+
+### EXAMPLE USING LIBRARY RPi.GPIO
+
+import RPi.GPIO as GPIO
+GPIO.setmode(GPIO.BCM)
+GPIO.cleanup()
+
 @publisher.route("/proximity")
 def publisher_proximity():
-    
+
     # set GPIO Pins
     pinTrigger = 23
     GPIO.setup(pinTrigger, GPIO.OUT)
     pinEcho = 24
     GPIO.setup(pinEcho, GPIO.IN)
-    
+
     # set Trigger to HIGH
     GPIO.output(pinTrigger, True)
-    
+
     # set Trigger after 0.01ms to LOW
     time.sleep(0.00001)
     GPIO.output(pinTrigger, False)
@@ -67,11 +68,11 @@ def publisher_proximity():
     # multiply with the sonic speed (34300 cm/s)
     # and divide by 2, because there and back
     distance = (TimeElapsed * 34300) / 2
-    
+
     distanceStr = "%.0f" % distance
     datetimeStr = datetime.datetime.now().strftime('%Y-%m-%d+%H:%M:%S')
-    
+
     queryUrl = "https://esteban-233722.appspot.com/raspberry/proximity/" + datetimeStr + "/" + distanceStr
-    return queryUrl
-    #return urllib.request.urlopen(queryUrl).read(1000)
+    return urllib.request.urlopen(queryUrl).read(1000)
+
 '''

@@ -20,17 +20,18 @@ def raspberry_proximityget():
     return json.dumps(list(x))
 
 
-@raspberry.route("/proximity/<string:datetime>/<int:distance>")
+@raspberry.route("/proximity/<string:datetime>/<float:distance>")
 def raspberry_proximity(datetime, distance):
     datastore_client = datastore.Client()
     kind = 'Proximity_Logs'
 
+    # Gets an usable ID
     key = datastore_client.key(kind)
     ids = datastore_client.allocate_ids(key, 1)
     id = ids[0].id
-    key = datastore_client.key(kind, id)
 
     # Prepares the new entity
+    key = datastore_client.key(kind, id)
     entity = datastore.Entity(key=key)
     entity['datetime'] = datetime
     entity['distance'] = distance
