@@ -12,7 +12,7 @@
 # below:
 cloud/env/
 raspberry/env/
-ESTEBAN-027b818e1e80.json
+cert.json
 
 # Python pycache:
 cloud/__pycache__/
